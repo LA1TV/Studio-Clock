@@ -14,5 +14,8 @@
     "socket.io"
   ],
   "author": "Luke Moscrop",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
 }
