@@ -4,8 +4,7 @@
   "description": "Pi Clock server",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "gulp build"
+    "gulp": "gulp"
   },
   "keywords": [
     "pi",
@@ -17,10 +16,13 @@
   "author": "Luke Moscrop",
   "license": "ISC",
   "dependencies": {
+    "async-polling": "^0.2.1",
     "express": "^4.14.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "pixi.js": "^4.2.2",
-    "socket.io": "^1.5.1"
+    "request": "^2.79.0",
+    "socket.io": "^1.5.1",
+    "socket.io-client": "^1.5.1"
   }
 }

@@ -6,11 +6,16 @@ const config = {
     liveColor: 0xFF0000,
     rehersalColor: 0x00FF00,
     inactiveColor: 0x303030,
+    offairText: "Studio Dark"
 };
 
 const renderer = PIXI.autoDetectRenderer(config.width, config.height);
 const stage = new PIXI.Container();
 const graphics = new PIXI.Graphics();
+
+//State
+let isLive = false;
+let currentShow = config.offairText;
 
 // Scaling to the right size for the display
 const digiclocksize  = renderer.height / 3.5;
@@ -104,7 +109,7 @@ rehersalText.y = ycenter * 0.8;
 rehersalText.anchor = new PIXI.Point(0.5, 0.5);
 stage.addChild(rehersalText);
 
-const programText = new PIXI.Text('STUDIO DARK', {fontFamily : 'Arial', fontSize: (indtxtsize * 0.4), fill : 'white', align : 'center'}); 
+const programText = new PIXI.Text('STUDIO DARK', {fontFamily : 'Arial', fontSize: (indtxtsize * 0.2), fill : 'white', align : 'center'}); 
 programText.x = xtxtpos;
 programText.y = ycenter * 1.4;
 programText.anchor = new PIXI.Point(0.5, 0.5);
@@ -141,10 +146,10 @@ function animate() {
 
     clockText.text = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
     secondText.text = ('0' + sectime).slice(-2);
-    programText.text = 'STUDIO DARK';
+    programText.text = currentShow;
 
     //draw info boxes
-    graphics.beginFill(config.liveColor);
+    graphics.beginFill((isLive) ? config.liveColor : config.inactiveColor);
     graphics.drawRect(xindboxpos, ind1y, indboxx, indboxy)
     graphics.endFill();
 
@@ -161,6 +166,13 @@ function animate() {
     renderer.render(stage);
     requestAnimationFrame(animate);
 }
+
+var socket = io(window.location.href);
+
+socket.on('live:status', function (status) {
+    isLive = status.live;
+    currentShow = (status.live) ? status.name : config.offairText;
+});
 
 //Fire one resize event to fit the screen
 resize();
