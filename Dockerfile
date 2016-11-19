@@ -1,19 +1,17 @@
 FROM node:6.9.1-alpine
-
 MAINTAINER Luke Moscrop <luke@moscrop.me>
 
-#Force Docker not to cache our package.json changes
-#ENV NPM_CONFIG_LOGLEVEL info
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
+RUN mkdir /app
+WORKDIR /app
 
-# Seperate our application logic
-WORKDIR /opt/app
-ADD . /opt/app
+ADD package.json /app/
+RUN npm install -q
+RUN npm install gulp -g -q
 
-EXPOSE 3001
+ADD . /app
+
 ENV PORT 3001
+EXPOSE $PORT
 
-CMD ["npm", "run", "build"]
+RUN gulp build
 CMD ["npm", "start"]
