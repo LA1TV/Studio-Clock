@@ -45,4 +45,8 @@ jspm_packages
 # Yarn Integrity file
 .yarn-integrity
 
+#MacOS rubbish
 .DS_Store
+
+#api keys
+config.json
