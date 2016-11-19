@@ -12,6 +12,26 @@ const renderer = PIXI.autoDetectRenderer(config.width, config.height);
 const stage = new PIXI.Container();
 const graphics = new PIXI.Graphics();
 
+// Scaling to the right size for the display
+const digiclocksize  = renderer.height / 3.5;
+const digiclockspace = renderer.height / 10.5;
+const dotsize        = renderer.height / 90;
+const hradius        = renderer.height / 2.5;
+const secradius      = hradius - (renderer.height / 26);
+const indtxtsize     = renderer.height / 5;
+const indboxy        = renderer.height / 6;
+const indboxx        = renderer.width / 2.5;
+
+const xclockpos      = renderer.width * 0.2875;
+const ycenter        = renderer.height / 2;
+const xtxtpos        = renderer.width * 0.75;
+const xindboxpos     = xtxtpos - (indboxx / 2);
+const ind1y          = (ycenter * 0.4) - (indboxy / 2);
+const ind2y          = (ycenter * 0.8) - (indboxy / 2);
+const ind3y          = (ycenter * 1.2) - (indboxy / 2);
+const txthmy         = ycenter - digiclockspace;
+const txtsecy        = ycenter + digiclockspace;
+
 function resize() {
     let w, h;
     const ratio = config.width / config.height;
@@ -33,27 +53,6 @@ window.onresize = function(event) {
 
 stage.addChild(graphics);
 document.body.appendChild(renderer.view);
-
-// Scaling to the right size for the display
-const digiclocksize  = renderer.height / 3.5;
-const digiclockspace = renderer.height / 10.5;
-const dotsize        = renderer.height / 90;
-const hradius        = renderer.height / 2.5;
-const secradius      = hradius - (renderer.height / 26);
-const indtxtsize     = renderer.height / 5;
-const indboxy        = renderer.height / 6;
-const indboxx        = renderer.width / 2.5;
-
-const xclockpos      = renderer.width * 0.2875;
-const ycenter        = renderer.height / 2;
-const xtxtpos        = renderer.width * 0.75;
-const xindboxpos     = xtxtpos - (indboxx / 2);
-const ind1y          = (ycenter * 0.4) - (indboxy / 2);
-const ind2y          = (ycenter * 0.8) - (indboxy / 2);
-const ind3y          = (ycenter * 1.2) - (indboxy / 2);
-const ind4y          = (ycenter * 1.6) - (indboxy / 2);
-const txthmy         = ycenter - digiclockspace;
-const txtsecy        = ycenter + digiclockspace;
 
 Math.radians = function(degrees) {
   return degrees * Math.PI / 180;
@@ -77,6 +76,7 @@ function paraeqshy(shy) {
     return ycenter - (hradius * (Math.sin(Math.radians((shy) + 90))));
 }
 
+//Clock Text
 
 const clockText = new PIXI.Text('##:##', {fontFamily : 'Arial', fontSize: (digiclocksize * 0.6), fill : 0xff1010, align : 'center'});
 clockText.x = xclockpos;
@@ -89,6 +89,8 @@ secondText.x = xclockpos;
 secondText.y = txtsecy;
 secondText.anchor = new PIXI.Point(0.5, 0.5);
 stage.addChild(secondText);
+
+//Studo Indicators
 
 const liveText = new PIXI.Text('ON AIR', {fontFamily : 'Arial', fontSize: (indtxtsize * 0.6), fill : 'black', align : 'center'}); 
 liveText.x = xtxtpos;
@@ -107,10 +109,6 @@ programText.x = xtxtpos;
 programText.y = ycenter * 1.4;
 programText.anchor = new PIXI.Point(0.5, 0.5);
 stage.addChild(programText);
-
-//Fire one resize event to fit the screen
-resize();
-animate();
 
 function animate() {
     graphics.clear();
@@ -159,9 +157,11 @@ function animate() {
     graphics.drawRect(xindboxpos, ind3y, indboxx, (indboxy * 2.2));
     graphics.endFill();
 
-    
-
     //Render the stage
     renderer.render(stage);
     requestAnimationFrame(animate);
 }
+
+//Fire one resize event to fit the screen
+resize();
+animate();
