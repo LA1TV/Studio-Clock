@@ -27,22 +27,32 @@ var polling = AsyncPolling(end => {
         }
     };
 
-    request(options, (error, response, body) => { 
-        const mediaItems = JSON.parse(body).data.mediaItems;
-
-        if(mediaItems.length <= 0) {
-            console.info('Nothing Currently Live.');
-
-            io.sockets.emit('live:status', {live: false });
+    request(options, (error, response, body) => {
+        
+        if (error || response.statusCode !== 200) [
+            // hopefully a request will succeed soon.
+            console.warn("API request error.");
             end();
-        } else {
-            const showName = mediaItems[0].name;
-            console.info(`Currently live with ${showName}`);
-
-            io.sockets.emit('live:status', {live: true, name: showName});
-            end();
+            return;
         }
         
+        try {
+            const mediaItems = JSON.parse(body).data.mediaItems;
+
+            if(mediaItems.length <= 0) {
+                console.info('Nothing Currently Live.');
+
+                io.sockets.emit('live:status', {live: false });
+            } else {
+                const showName = mediaItems[0].name;
+                console.info(`Currently live with ${showName}`);
+
+                io.sockets.emit('live:status', {live: true, name: showName});
+            }
+        }
+        finally {    
+            end();
+        }
     })
 
 }, 3000).run();
