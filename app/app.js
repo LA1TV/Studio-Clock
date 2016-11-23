@@ -115,6 +115,7 @@ programText.y = ycenter * 1.4;
 programText.anchor = new PIXI.Point(0.5, 0.5);
 stage.addChild(programText);
 
+var lastsectime = 0;
 function animate() {
     graphics.clear();
     renderer.backgroundColor = config.bgColor;
@@ -123,47 +124,51 @@ function animate() {
     const sectime = date.getSeconds();
     const secdeg  = (sectime + 1) * 6;
 
-    let smx = 0, smy = 0
-    while (smx < secdeg) {   
-        graphics.beginFill(config.clockColor);
-        graphics.drawCircle(paraeqsmx(smx), paraeqsmy(smy), dotsize); 
-        graphics.endFill();
+    if(lastsectime != sectime){
 
-        smy += 6;  // 6 Degrees per second
-        smx += 6;
+      let smx = 0, smy = 0
+      while (smx < secdeg) {
+          graphics.beginFill(config.clockColor);
+          graphics.drawCircle(paraeqsmx(smx), paraeqsmy(smy), dotsize);
+          graphics.endFill();
+
+          smy += 6;  // 6 Degrees per second
+          smx += 6;
+      }
+
+      // Draw hour markers
+      let shx = 0, shy = 0;
+      while (shx < 360) {
+          graphics.beginFill(config.clockColor);
+          graphics.drawCircle(paraeqshx(shx), paraeqshy(shy), dotsize);
+          graphics.endFill();
+
+          shy += 30;  // 30 Degrees per hour
+          shx += 30;
+      }
+
+      clockText.text = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
+      secondText.text = ('0' + sectime).slice(-2);
+      programText.text = currentShow;
+
+      //draw info boxes
+      graphics.beginFill((isLive) ? config.liveColor : config.inactiveColor);
+      graphics.drawRect(xindboxpos, ind1y, indboxx, indboxy)
+      graphics.endFill();
+
+      graphics.beginFill(config.inactiveColor);
+      graphics.drawRect(xindboxpos, ind2y, indboxx, indboxy)
+      graphics.endFill();
+
+      graphics.beginFill(0x000000);
+      graphics.lineStyle(5, 0xFFFFFF);
+      graphics.drawRect(xindboxpos, ind3y, indboxx, (indboxy * 2.2));
+      graphics.endFill();
+
+      //Render the stage
+      renderer.render(stage);
+      lastsectime = sectime;
     }
-
-    // Draw hour markers
-    let shx = 0, shy = 0;
-    while (shx < 360) {
-        graphics.beginFill(config.clockColor);
-        graphics.drawCircle(paraeqshx(shx), paraeqshy(shy), dotsize); 
-        graphics.endFill();
-
-        shy += 30;  // 30 Degrees per hour
-        shx += 30;
-    }
-
-    clockText.text = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
-    secondText.text = ('0' + sectime).slice(-2);
-    programText.text = currentShow;
-
-    //draw info boxes
-    graphics.beginFill((isLive) ? config.liveColor : config.inactiveColor);
-    graphics.drawRect(xindboxpos, ind1y, indboxx, indboxy)
-    graphics.endFill();
-
-    graphics.beginFill(config.inactiveColor);
-    graphics.drawRect(xindboxpos, ind2y, indboxx, indboxy)
-    graphics.endFill();
-
-    graphics.beginFill(0x000000);
-    graphics.lineStyle(5, 0xFFFFFF);
-    graphics.drawRect(xindboxpos, ind3y, indboxx, (indboxy * 2.2));
-    graphics.endFill();
-
-    //Render the stage
-    renderer.render(stage);
     requestAnimationFrame(animate);
 }
 
