@@ -27,13 +27,11 @@ var polling = AsyncPolling(end => {
         }
     };
 
-    request(options, (error, response, body) => {
-        
-        if (error || response.statusCode !== 200) [
+    request(options, (error, response, body) => {      
+        if (error || response.statusCode !== 200) {
             // hopefully a request will succeed soon.
             console.warn("API request error.");
             end();
-            return;
         }
         
         try {
@@ -55,5 +53,7 @@ var polling = AsyncPolling(end => {
         }
     })
 
-}, 3000).run();
+}, 3000);
+
+polling.run();
 
