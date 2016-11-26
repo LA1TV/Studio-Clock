@@ -32,6 +32,7 @@ var polling = AsyncPolling(end => {
             // hopefully a request will succeed soon.
             console.warn("API request error.");
             end();
+            return;
         }
         
         try {
